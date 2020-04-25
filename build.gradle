@@ -1,0 +1,39 @@
+plugins {
+    id 'java'
+    id 'java-gradle-plugin'
+    id 'maven'
+}
+
+group 'com.leobia.gradle'
+version '0.0.1'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+gradlePlugin {
+    plugins {
+        jsGradleCompiler {
+            id = 'com.leobia.gradle.jsgradlecompiler'
+            implementationClass = 'com.leobia.gradle.JsCompilerPlugin'
+        }
+    }
+}
+
+dependencies {
+    compileOnly gradleApi()
+    compile('com.google.javascript:closure-compiler:v20200406') {
+        exclude module: 'junit'
+    }
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: uri('./repo'))
+        }
+    }
+}

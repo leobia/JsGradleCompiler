@@ -1,0 +1,8 @@
+.gradle/
+.idea/
+build/
+demo/.gradle/
+demo/build/
+repo/
+/demo/
+demo/
