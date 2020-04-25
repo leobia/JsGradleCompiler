@@ -1,4 +1,5 @@
 plugins {
+    id 'com.gradle.plugin-publish' version '0.11.0'
     id 'java'
     id 'java-gradle-plugin'
     id 'maven'
@@ -25,6 +26,7 @@ gradlePlugin {
 
 dependencies {
     compileOnly gradleApi()
+    implementation("com.google.auto.value:auto-value-annotations:1.7")
     compile('com.google.javascript:closure-compiler:v20200406') {
         exclude module: 'junit'
     }
@@ -36,4 +38,22 @@ uploadArchives {
             repository(url: uri('./repo'))
         }
     }
+}
+
+pluginBundle {
+    description = "Compile and minify .js files"
+    website = "https://github.com/leobia/JsGradleCompiler"
+    vcsUrl = "https://github.com/leobia/JsGradleCompiler"
+    tags = ["js", "compile", "minify", "google closure", "transpile", "build", "build artifacts", "cd", "ci", "files", "java"]
+
+    plugins {
+        jsGradleCompiler {
+            displayName = "Js Compiler and Minifier"
+        }
+    }
+}
+
+// Added to prevent: 'error: cannot access SourcePosition'
+allprojects {
+    tasks.withType(Javadoc).all { enabled = false }
 }
