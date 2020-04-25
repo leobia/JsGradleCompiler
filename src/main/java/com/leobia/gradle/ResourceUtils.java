@@ -41,7 +41,7 @@ public class ResourceUtils {
         try {
             outputFile.createNewFile();
         } catch (IOException e) {
-            throw new GradleException("Cannot create new file");
+            throw new GradleException("Cannot create new file " + destinationPath);
         }
 
         return outputFile;
@@ -49,8 +49,9 @@ public class ResourceUtils {
 
     /**
      * Checks on destination path, if it is null it will create a new dir and new file under source path
+     *
      * @param destinationPath destination path declared by the user
-     * @param sourcePath used as a backup if destination path is not passed
+     * @param sourcePath      used as a backup if destination path is not passed
      * @return output file
      */
     public static String retrieveDestinationPath(String destinationPath, String sourcePath, Logger logger) {
@@ -74,15 +75,6 @@ public class ResourceUtils {
         return destinationPath;
     }
 
-    public static void write(File file, String data, Logger logger) {
-        file.getParentFile().mkdirs();
-        try (OutputStream stream = new FileOutputStream(file, false)) {
-            stream.write(data.getBytes());
-        } catch (IOException e) {
-            logger.error("Error writing file: " + file.getName(), e);
-        }
-    }
-
     public static String addToPath(String path, String toAdd) {
         String output = path;
         String lastChar = output.substring(output.length() - 1);
@@ -94,5 +86,14 @@ public class ResourceUtils {
         }
 
         return output;
+    }
+
+    public static void write(File file, String data, Logger logger) {
+        file.getParentFile().mkdirs();
+        try (OutputStream stream = new FileOutputStream(file, false)) {
+            stream.write(data.getBytes());
+        } catch (IOException e) {
+            logger.error("Error writing file: " + file.getName(), e);
+        }
     }
 }

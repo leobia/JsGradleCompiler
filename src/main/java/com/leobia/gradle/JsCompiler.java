@@ -8,6 +8,7 @@ import org.gradle.api.logging.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static com.google.javascript.jscomp.CompilerOptions.Environment.BROWSER;
@@ -35,6 +36,41 @@ public class JsCompiler {
 
         List<SourceFile> inputs = getSourceInputFiles(extension);
 
+
+        if (extension.isCombineAllFiles()) {
+            compileIntoSingleFile(extension, options, externs, inputs);
+        } else {
+            compileIntoSplittedFiles(extension, options, externs, inputs);
+        }
+
+    }
+
+    private void compileIntoSplittedFiles(JsCompilerExtension extension, CompilerOptions options, List<SourceFile> externs, List<SourceFile> inputs) {
+
+        if (extension.getOutputPath() == null || extension.getOutputPath().isEmpty()) {
+            throw new GradleException("Output path is mandatory if combineAllFiles is false");
+        }
+        String destination = extension.getOutputPath();
+        File destFile = new File(destination);
+        if (destFile.isFile()) {
+            destination = destFile.getParent();
+        }
+        for (SourceFile input : inputs) {
+            Compiler compiler = new Compiler();
+            File inputFile = new File(input.getName());
+            String path = ResourceUtils.addToPath(destination, inputFile.getName());
+            File output = ResourceUtils.getOutputFile(path, extension.getInputPath(), logger);
+            Result result = compiler.compile(externs, Collections.singletonList(input), options);
+            if (result.success) {
+                ResourceUtils.write(output, compiler.toSource(), logger);
+            } else {
+                logger.warn("Result of compilation was false");
+            }
+        }
+
+    }
+
+    private void compileIntoSingleFile(JsCompilerExtension extension, CompilerOptions options, List<SourceFile> externs, List<SourceFile> inputs) {
         Compiler compiler = new Compiler();
 
         File output = ResourceUtils.getOutputFile(extension.getOutputPath(), extension.getInputPath(), logger);
@@ -46,7 +82,6 @@ public class JsCompiler {
         } else {
             logger.warn("Result of compilation was false");
         }
-
     }
 
     private CompilerOptions optionsFromExtension(JsCompilerExtension extension) {
