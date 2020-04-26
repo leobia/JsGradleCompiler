@@ -65,11 +65,11 @@ public class ResourceUtils {
             }
             File minDir = new File(destinationPath);
             minDir.mkdir();
-            destinationPath = addToPath(destinationPath, "output.js");
+            destinationPath = addToPath(destinationPath, "script.min.js");
         } else {
             File destPathFile = new File(destinationPath);
             if (destPathFile.isDirectory()) {
-                destinationPath = addToPath(destinationPath, "output.js");
+                destinationPath = addToPath(destinationPath, "script.min.js");
             }
         }
         return destinationPath;
