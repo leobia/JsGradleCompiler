@@ -29,7 +29,7 @@ To do so add these following lines to your *build.gradle*:
         }  
       }  
       dependencies {  
-        classpath "com.leobia.gradle:jsgradlecompiler:0.1.0" // this is my plugin
+        classpath "com.leobia.gradle:jsgradlecompiler:0.2.0" // this is my plugin
       }  
     }
     apply plugin: "com.leobia.gradle.jsgradlecompiler"
@@ -47,25 +47,25 @@ The usage of the plugin it's pretty simple, first you define the options (inside
     }
 
 
-|Option       |Type     |Description                                                                               |
-|-------------|---------|------------------------------------------------------------------------------------------|
-|inputPath*   |String   |It telss the plugin where to search input files (not recursive)                           |
-|outputPath |String   |Path where output should be saved. Can be a directory or a single file. If it is a directory it will be used the input file name (the same behaviour is used if it is a file but the flag *combineAllFiles* is **false**)              |
-|compilationLevel         |String  |[Possible values](https://developers.google.com/closure/compiler/docs/compilation_levels): WHITESPACE_ONLY, SIMPLE_OPTIMIZATIONS or ADVANCED_OPTIMIZATIONS|
-|jsVersionIn  |String   |[Possible values](https://javadoc.io/doc/com.google.javascript/closure-compiler/latest/com/google/javascript/jscomp/CompilerOptions.LanguageMode.html)    |
-|jsVersionOut  |String   |[Possible values](https://javadoc.io/doc/com.google.javascript/closure-compiler/latest/com/google/javascript/jscomp/CompilerOptions.LanguageMode.html)    |
-|combineAllFiles  |Boolean |Tells if the output should be merged into single file or the input file name should be preserved    |
+|Option               |Type    |Description                                                                                                                                                                                                              |
+|---------------------|--------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|inputPath*           |String  |It telss the plugin where to search input files (not recursive)                                                                                                                                                          |
+|outputPath           |String  |Path where output should be saved. Can be a directory or a single file. If it is a directory it will be used the input file name (the same behaviour is used if it is a file but the flag *combineAllFiles* is **false**)|
+|compilationLevel     |String  |[Possible values](https://developers.google.com/closure/compiler/docs/compilation_levels): WHITESPACE_ONLY, SIMPLE_OPTIMIZATIONS or ADVANCED_OPTIMIZATIONS                                                               |
+|jsVersionIn          |String  |[Possible values](https://javadoc.io/doc/com.google.javascript/closure-compiler/latest/com/google/javascript/jscomp/CompilerOptions.LanguageMode.html)                                                                   |
+|jsVersionOut         |String  |[Possible values](https://javadoc.io/doc/com.google.javascript/closure-compiler/latest/com/google/javascript/jscomp/CompilerOptions.LanguageMode.html)                                                                   |
+|combineAllFiles      |Boolean |Tells if the output should be merged into single file or the input file name should be preserved                                                                                                                         |
+|keepSameBame         |Boolean |if true keep the same name of input files otherwise it adds .min (this depends also by the value of combineAllFiles)                                                                                                     |
 
 and then you can call the task:
 
-    compileSass
+    compileJs
 
 ## What's next  :rocket:
 
 
 These are the main features that I plan to include in the project :
 
- - Keep same name or .min.js
  - Recursive file search
  
 ## Built With :hammer:
