@@ -71,7 +71,7 @@ These are the main features that I plan to include in the project :
 ## Built With :hammer:
 
 * [Gradle](https://gradle.org/) - Dependency Management
-* [jsass](https://jsass.readthedocs.io/en/latest/) - Used to compile sass
+* [Google Closure Compiler](https://developers.google.com/closure/compiler) - Used to compile js
 
 ## Author :boy:
 
