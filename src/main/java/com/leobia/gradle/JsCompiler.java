@@ -52,13 +52,18 @@ public class JsCompiler {
         }
         String destination = extension.getOutputPath();
         File destFile = new File(destination);
-        if (destFile.isFile()) {
+        if (destFile.isFile() || ResourceUtils.hasJsExtension(destination)) {
             destination = destFile.getParent();
         }
         for (SourceFile input : inputs) {
             Compiler compiler = new Compiler();
             File inputFile = new File(input.getName());
-            String path = ResourceUtils.addToPath(destination, inputFile.getName());
+            String path;
+            if (extension.isKeepSameName()) {
+                path = ResourceUtils.addToPath(destination, inputFile.getName());
+            } else {
+                path = ResourceUtils.addToPath(destination, ResourceUtils.minifiedName(inputFile.getName()));
+            }
             File output = ResourceUtils.getOutputFile(path, extension.getInputPath(), logger);
             Result result = compiler.compile(externs, Collections.singletonList(input), options);
             if (result.success) {

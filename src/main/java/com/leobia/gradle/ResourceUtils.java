@@ -96,4 +96,15 @@ public class ResourceUtils {
             logger.error("Error writing file: " + file.getName(), e);
         }
     }
+
+    public static String minifiedName(String name) {
+        String minName;
+
+        if (hasJsExtension(name)) {
+            minName = name.substring(0, name.length() - JS.length()) + "min.js";
+        } else {
+            minName = name;
+        }
+        return minName;
+    }
 }
