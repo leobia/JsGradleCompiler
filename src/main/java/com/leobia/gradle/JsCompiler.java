@@ -1,7 +1,11 @@
 package com.leobia.gradle;
 
+import com.google.javascript.jscomp.CompilationLevel;
 import com.google.javascript.jscomp.Compiler;
-import com.google.javascript.jscomp.*;
+import com.google.javascript.jscomp.CompilerOptions;
+import com.google.javascript.jscomp.Result;
+import com.google.javascript.jscomp.SourceFile;
+import com.google.javascript.jscomp.WarningLevel;
 import org.gradle.api.GradleException;
 import org.gradle.api.logging.Logger;
 
@@ -11,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.google.javascript.jscomp.AbstractCommandLineRunner.getBuiltinExterns;
 import static com.google.javascript.jscomp.CompilerOptions.Environment.BROWSER;
 
 public class JsCompiler {
@@ -29,7 +34,7 @@ public class JsCompiler {
         level.setOptionsForWarningLevel(options);
         List<SourceFile> externs;
         try {
-            externs = CommandLineRunner.getBuiltinExterns(BROWSER);
+            externs = getBuiltinExterns(BROWSER);
         } catch (IOException e) {
             throw new GradleException("Error during getBuiltinExterns");
         }
@@ -50,11 +55,8 @@ public class JsCompiler {
         if (extension.getOutputPath() == null || extension.getOutputPath().isEmpty()) {
             throw new GradleException("Output path is mandatory if combineAllFiles is false");
         }
-        String destination = extension.getOutputPath();
-        File destFile = new File(destination);
-        if (destFile.isFile() || ResourceUtils.hasJsExtension(destination)) {
-            destination = destFile.getParent();
-        }
+        String destination = checkOutputPath(extension.getOutputPath());
+        
         for (SourceFile input : inputs) {
             Compiler compiler = new Compiler();
             File inputFile = new File(input.getName());
@@ -73,6 +75,28 @@ public class JsCompiler {
             }
         }
 
+    }
+
+    /**
+     * Check if the provided outputh is a file or a directory. If it is a file takes the parent directory and if it doesn't exists it creates a new one.
+     * @param outputPath from extension
+     * @return the directory path
+     */
+    private String checkOutputPath(String outputPath) {
+        File destFile = new File(outputPath);
+
+        // If it is a file I should take the parent directory
+        if (destFile.isFile() || ResourceUtils.hasJsExtension(outputPath)) {
+            outputPath = destFile.getParent();
+        }
+        
+        destFile = new File(outputPath);
+        
+        if (!destFile.exists()) {
+            destFile.mkdirs();
+        }
+
+        return outputPath;
     }
 
     private void compileIntoSingleFile(JsCompilerExtension extension, CompilerOptions options, List<SourceFile> externs, List<SourceFile> inputs) {
