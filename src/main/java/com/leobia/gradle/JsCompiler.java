@@ -12,6 +12,7 @@ import org.gradle.api.logging.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -19,7 +20,6 @@ import static com.google.javascript.jscomp.AbstractCommandLineRunner.getBuiltinE
 import static com.google.javascript.jscomp.CompilerOptions.Environment.BROWSER;
 
 public class JsCompiler {
-
 
     private final Logger logger;
 
@@ -41,7 +41,6 @@ public class JsCompiler {
 
         List<SourceFile> inputs = getSourceInputFiles(extension);
 
-
         if (extension.isCombineAllFiles()) {
             compileIntoSingleFile(extension, options, externs, inputs);
         } else {
@@ -56,7 +55,7 @@ public class JsCompiler {
             throw new GradleException("Output path is mandatory if combineAllFiles is false");
         }
         String destination = checkOutputPath(extension.getOutputPath());
-        
+
         for (SourceFile input : inputs) {
             Compiler compiler = new Compiler();
             File inputFile = new File(input.getName());
@@ -79,6 +78,7 @@ public class JsCompiler {
 
     /**
      * Check if the provided outputh is a file or a directory. If it is a file takes the parent directory and if it doesn't exists it creates a new one.
+     *
      * @param outputPath from extension
      * @return the directory path
      */
@@ -89,9 +89,9 @@ public class JsCompiler {
         if (destFile.isFile() || ResourceUtils.hasJsExtension(outputPath)) {
             outputPath = destFile.getParent();
         }
-        
+
         destFile = new File(outputPath);
-        
+
         if (!destFile.exists()) {
             destFile.mkdirs();
         }
@@ -137,22 +137,40 @@ public class JsCompiler {
             if (ResourceUtils.isJsFile(inputFile)) {
                 jsSourceFiles.add(SourceFile.fromFile(inputFile.getPath()));
             } else if (inputFile.isDirectory()) {
-                File[] files = inputFile.listFiles();
-                if (files != null) {
-                    for (File file : files) {
-                        if (ResourceUtils.isJsFile(file)) {
-                            jsSourceFiles.add(SourceFile.fromFile(file.getPath()));
-                        }
-                    }
-                }
+                jsSourceFiles.addAll(retrieveJsFiles(inputFile, extension.isRecursiveSearchOnSource(), extension.getOutputPath()));
             } else {
                 throw new GradleException("Input path not valid or does not exists!");
             }
         } else {
             throw new GradleException("Input path not valid or does not exists!");
         }
+        return jsSourceFiles;
+    }
 
-
+    /**
+     * Retrieve all js files of input file
+     *
+     * @param inputFile               The input file or folder
+     * @param recursiveSearchOnSource Specified in jsOptions
+     * @param outputPath              Not returned by this list to avoid double code on the same file
+     * @return the list of js files, excluding the output one
+     */
+    private Collection<? extends SourceFile> retrieveJsFiles(File inputFile, boolean recursiveSearchOnSource, String outputPath) {
+        List<SourceFile> jsSourceFiles = new ArrayList<>();
+        File[] files = inputFile.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (!file.getAbsolutePath().equals(outputPath)) {
+                    if (ResourceUtils.isJsFile(file)) {
+                        jsSourceFiles.add(SourceFile.fromFile(file.getPath()));
+                    } else if (file.isDirectory() && recursiveSearchOnSource) {
+                        jsSourceFiles.addAll(retrieveJsFiles(file, true, outputPath));
+                    }
+                } else {
+                    logger.debug("Skipping file " + file.getAbsolutePath());
+                }
+            }
+        }
         return jsSourceFiles;
     }
 
