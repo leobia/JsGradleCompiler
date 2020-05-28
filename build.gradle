@@ -27,7 +27,7 @@ gradlePlugin {
 dependencies {
     compileOnly gradleApi()
     implementation("com.google.auto.value:auto-value-annotations:1.7")
-    compile('com.google.javascript:closure-compiler:v20200406') {
+    implementation('com.google.javascript:closure-compiler:v20200517') {
         exclude module: 'junit'
     }
 }
