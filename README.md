@@ -14,7 +14,7 @@ A simple Js compiler for gradle (tested only on Gradle 6.0+, but it should work 
 Use on of these inside 
 ```groovy
 plugins {
-  id "com.leobia.gradle.jsgradlecompiler" version "0.2.0"
+  id "com.leobia.gradle.jsgradlecompiler" version "0.2.1"
 }
 ```
 
@@ -27,7 +27,7 @@ buildscript {
     }
   }
   dependencies {
-    classpath "gradle.plugin.com.leobia.gradle:jsgradlecompiler:0.2.0"
+    classpath "gradle.plugin.com.leobia.gradle:jsgradlecompiler:0.2.1"
   }
 }
 
