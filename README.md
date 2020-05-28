@@ -73,7 +73,7 @@ and then you can call the task:
 
 ## Author :boy:
 
-* **Leonardo Bianco** - [leobia](https://github.com/leobia)
+* **Leonardo Bianco** - [leobia](https://leobia.github.io/)
 
 Checkout my Gradle [SassCompiler](https://github.com/leobia/SassGradleCompiler) 
 
