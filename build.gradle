@@ -26,10 +26,11 @@ gradlePlugin {
 
 dependencies {
     compileOnly gradleApi()
-    implementation("com.google.auto.value:auto-value-annotations:1.7")
-    implementation('com.google.javascript:closure-compiler:v20200517') {
+    implementation ('com.google.auto.value:auto-value-annotations:1.7')
+    implementation ('com.google.javascript:closure-compiler:v20200517') {
         exclude module: 'junit'
     }
+    testImplementation ('org.junit.jupiter:junit-jupiter:5.6.2')
 }
 
 uploadArchives {

@@ -1,4 +1,4 @@
-package com.leobia.gradle;
+package com.leobia.gradle.utils;
 
 import org.gradle.api.GradleException;
 import org.gradle.api.logging.Logger;
@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 public class ResourceUtils {
-    
+
     private ResourceUtils() {}
 
     public static final String JS = "js";
@@ -82,7 +82,7 @@ public class ResourceUtils {
                 parentDir.mkdirs();
             }
         }
-        
+
         return destinationPath;
     }
 

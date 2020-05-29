@@ -8,7 +8,6 @@ import javax.inject.Inject;
 public class JsCompilerTask extends DefaultTask {
 
     private JsCompilerExtension extension;
-    private JsCompiler compiler;
 
     @Inject
     public JsCompilerTask(JsCompilerExtension extension) {
@@ -17,7 +16,7 @@ public class JsCompilerTask extends DefaultTask {
 
     @TaskAction
     public void compileJs() {
-        compiler = new JsCompiler(getLogger());
+        JsCompiler compiler = new JsCompiler(getLogger());
         compiler.compile(extension);
     }
 }
