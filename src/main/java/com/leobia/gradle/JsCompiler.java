@@ -85,7 +85,7 @@ public class JsCompiler {
      *         is a directory -> all existing js file inside this dir will get compiled
      *         <ul>
      *             <li>
-     *                 if {@code extension.isRecursiveSearchOnSource()} -> will get all js files in subfolders (except the one provided by {@code extension.getOutputPath()}
+     *                 if {@code extension.isRecursiveSearchOnSource()} -> will get all js files in subfolders
      *             </li>
      *         </ul>
      *     </li>
@@ -117,9 +117,10 @@ public class JsCompiler {
     private Collection<? extends SourceFile> retrieveJsFiles(File inputFile, boolean recursiveSearchOnSource, String outputPath) {
         List<SourceFile> jsSourceFiles = new ArrayList<>();
         File[] files = inputFile.listFiles();
+        String sysOutputPath = ResourceUtils.separatorsToSystem(outputPath);
         if (files != null) {
             for (File file : files) {
-                if (!file.getAbsolutePath().equals(outputPath)) {
+                if (!file.getPath().equals(sysOutputPath)) {
                     if (ResourceUtils.isJsFile(file)) {
                         jsSourceFiles.add(SourceFile.fromFile(file.getPath()));
                     } else if (file.isDirectory() && recursiveSearchOnSource) {
