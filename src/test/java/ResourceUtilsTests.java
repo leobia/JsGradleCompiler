@@ -48,7 +48,7 @@ public class ResourceUtilsTests {
 
     @Test
     public void writeTest() {
-        String data = "test" + new Random();
+        String data = "test" + new Random().nextInt();
         String sep = File.separator;
         File notExistingFile = new File("src" + sep + "test" + sep + "resources" + sep + "writeExceptionTest" + sep + "script.min.js");
         assertThrows(GradleException.class, () -> ResourceUtils.write(notExistingFile, data, Logging.getLogger(ResourceUtilsTests.class)));
@@ -69,8 +69,15 @@ public class ResourceUtilsTests {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
-
+    @Test
+    public void minifiedNameTest() {
+        assertEquals("directory", ResourceUtils.minifiedName("directory"));
+        assertEquals("file.txt", ResourceUtils.minifiedName("file.txt"));
+        assertEquals("/path/to/file.txt", ResourceUtils.minifiedName("/path/to/file.txt"));
+        assertEquals("/path/to/file.min.js", ResourceUtils.minifiedName("/path/to/file.js"));
+        assertEquals("/path/to.js/file.min.js", ResourceUtils.minifiedName("/path/to.js/file.js"));
     }
 
 }
