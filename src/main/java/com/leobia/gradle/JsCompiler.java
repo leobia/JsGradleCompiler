@@ -72,7 +72,30 @@ public class JsCompiler {
         return options;
     }
 
-    private List<SourceFile> getSourceInputFiles(JsCompilerExtension extension) {
+
+    /**
+     * Retrieves js files from {@code extension.getInputPath()}.
+     * <br>
+     * <br>
+     * <p>
+     * ible cases of {@code extension.getInputPath()}:<br>
+     * <ul>
+     *     <li>is a js file (and exists) -> only this file will get compiled.</li>
+     *     <li>
+     *         is a directory -> all existing js file inside this dir will get compiled
+     *         <ul>
+     *             <li>
+     *                 if {@code extension.isRecursiveSearchOnSource()} -> will get all js files in subfolders (except the one provided by {@code extension.getOutputPath()}
+     *             </li>
+     *         </ul>
+     *     </li>
+     *     <li>is not a dir and is not a .js file -> {@code new GradleException()}</li>
+     * </ul>
+     *
+     * @param extension if it's a recursive search, outputPath will be excluded
+     * @return list of source files retrieved from inputPath
+     */
+    public List<SourceFile> getSourceInputFiles(JsCompilerExtension extension) {
         String sourcePath = extension.getInputPath();
         List<SourceFile> jsSourceFiles = new ArrayList<>();
 
@@ -91,14 +114,6 @@ public class JsCompiler {
         return jsSourceFiles;
     }
 
-    /**
-     * Retrieve all js files of input file
-     *
-     * @param inputFile               The input file or folder
-     * @param recursiveSearchOnSource Specified in jsOptions
-     * @param outputPath              Not returned by this list to avoid double code on the same file
-     * @return the list of js files, excluding the output one
-     */
     private Collection<? extends SourceFile> retrieveJsFiles(File inputFile, boolean recursiveSearchOnSource, String outputPath) {
         List<SourceFile> jsSourceFiles = new ArrayList<>();
         File[] files = inputFile.listFiles();
