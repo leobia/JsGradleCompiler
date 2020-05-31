@@ -11,7 +11,7 @@ A simple Js compiler for gradle (tested only on Gradle 6.0+, but it should work 
 ## Instructions :pencil:
 
 #### Import the plugin
-Use on of these inside 
+Place one of these code snippets in build.gradle: 
 ```groovy
 plugins {
   id "com.leobia.gradle.jsgradlecompiler" version "0.3.0"
